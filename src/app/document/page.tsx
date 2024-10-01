@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect } from "react";
@@ -77,8 +78,8 @@ export default function BoInfo() {
   const [reason, setReason] = useState<string>("");
   const [isWaitingButtonBoInfoClicked, setIsWaitingButtonBoInfoClicked] =
     useState(false);
-  const [isWaitingButtonLegalDocClicked, setIsWaitingButtonLegalDocClicked] =
-    useState(false);
+  // const [isWaitingButtonLegalDocClicked, setIsWaitingButtonLegalDocClicked] =
+  //   useState(false);
 
   const { data: session } = useSession();
   const token = session?.user?.token;
@@ -141,7 +142,7 @@ export default function BoInfo() {
               size="md"
               onClick={() => {
                 handleReviewOrRejectOrPending(
-                  selectedItem?.boInfos?.id!,
+                  selectedItem?.boInfos?.id! as number,
                   "on review",
                   "boInfo"
                 );
@@ -164,7 +165,7 @@ export default function BoInfo() {
             onClick={() =>
               CenterAlert("question", () =>
                 handleReviewOrRejectOrPending(
-                  selectedItem?.boInfos?.id!,
+                  selectedItem?.boInfos?.id! as number,
                   "approved",
                   "boInfo"
                 )
@@ -199,7 +200,7 @@ export default function BoInfo() {
                   "on review",
                   "legalDoc"
                 );
-                setIsWaitingButtonLegalDocClicked(true);
+                // setIsWaitingButtonLegalDocClicked(true);
               }}
             />
           )}

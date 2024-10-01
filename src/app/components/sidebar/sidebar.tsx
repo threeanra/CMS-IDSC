@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import logo from "@/public/assets/logo.png";
 import {
-  faCapsules,
-  faChartBar,
-  faCog,
+  // faCapsules,
+  // faChartBar,
+  // faCog,
   faFile,
-  faHospital,
+  // faHospital,
   faRightFromBracket,
-  faUsers,
+  // faUsers,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
