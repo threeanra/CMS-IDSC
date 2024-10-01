@@ -12,7 +12,7 @@ import Modal from "@/app/components/modal/modal";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import InputLink from "@/app/components/inputlink/inputlink";
-import { CenterAlert } from "../components/alert/alert";
+import { CenterAlert } from "@/app/components/alert/alert";
 
 interface BoInfos {
   id: string | number;
@@ -78,8 +78,8 @@ export default function BoInfo() {
   const [reason, setReason] = useState<string>("");
   const [isWaitingButtonBoInfoClicked, setIsWaitingButtonBoInfoClicked] =
     useState(false);
-  // const [isWaitingButtonLegalDocClicked, setIsWaitingButtonLegalDocClicked] =
-  //   useState(false);
+  const [isWaitingButtonLegalDocClicked, setIsWaitingButtonLegalDocClicked] =
+    useState(false);
 
   const { data: session } = useSession();
   const token = session?.user?.token;
@@ -124,16 +124,18 @@ export default function BoInfo() {
 
   const renderBoInfoButtons = () => {
     const status = selectedItem?.boInfos?.status;
+    const approval = ["approved", "rejected"];
 
-    if (status !== "approved") {
+    if (!approval.includes(status as string)) {
       return (
         <div className="flex justify-end gap-2 flex-col md:flex-row mb-3">
           <Button
             title="Revisi"
             size="md"
-            onClick={() =>
-              openModal("Alasan untuk ditinjau (Bisnis Owner Info)")
-            }
+            onClick={() => {
+              openModal("Alasan untuk ditinjau (Bisnis Owner Info)");
+              setIsWaitingButtonBoInfoClicked(true);
+            }}
           />
           {!isWaitingButtonBoInfoClicked && status !== "on review" && (
             <Button
@@ -154,23 +156,25 @@ export default function BoInfo() {
             color="error"
             title="Tolak"
             size="md"
-            onClick={() =>
-              openModal("Alasan untuk ditolak (Bisnis Owner Info)")
-            }
+            onClick={() => {
+              openModal("Alasan untuk ditolak (Bisnis Owner Info)");
+              setIsWaitingButtonBoInfoClicked(true);
+            }}
           />
           <Button
             color="success"
             title="Setujui"
             size="md"
-            onClick={() =>
+            onClick={() => {
               CenterAlert("question", () =>
                 handleReviewOrRejectOrPending(
                   selectedItem?.boInfos?.id! as number,
                   "approved",
                   "boInfo"
                 )
-              )
-            }
+              );
+              setIsWaitingButtonBoInfoClicked(true);
+            }}
           />
         </div>
       );
@@ -180,16 +184,20 @@ export default function BoInfo() {
 
   const renderLegalDokumenButtons = () => {
     const status = selectedItem?.legalDokumen?.status;
+    const approval = ["approved", "rejected"];
 
-    if (status !== "approved") {
+    if (!approval.includes(status as string)) {
       return (
         <div className="flex justify-end gap-2 flex-col md:flex-row mb-3">
           <Button
             title="Revisi"
             size="md"
-            onClick={() => openModal("Alasan untuk ditinjau (Dokumen Legal)")}
+            onClick={() => {
+              openModal("Alasan untuk ditinjau (Dokumen Legal)");
+              setIsWaitingButtonLegalDocClicked(true);
+            }}
           />
-          {!isWaitingButtonBoInfoClicked && status !== "on review" && (
+          {!isWaitingButtonLegalDocClicked && status !== "on review" && (
             <Button
               color="neutral"
               title="Menunggu"
@@ -200,7 +208,7 @@ export default function BoInfo() {
                   "on review",
                   "legalDoc"
                 );
-                // setIsWaitingButtonLegalDocClicked(true);
+                setIsWaitingButtonLegalDocClicked(true);
               }}
             />
           )}
@@ -208,21 +216,25 @@ export default function BoInfo() {
             color="error"
             title="Tolak"
             size="md"
-            onClick={() => openModal("Alasan untuk ditolak (Dokumen Legal)")}
+            onClick={() => {
+              openModal("Alasan untuk ditolak (Dokumen Legal)");
+              setIsWaitingButtonLegalDocClicked(true);
+            }}
           />
           <Button
             color="success"
             title="Setujui"
             size="md"
-            onClick={() =>
+            onClick={() => {
               CenterAlert("question", () =>
                 handleReviewOrRejectOrPending(
                   selectedItem?.legalDokumen?.id!,
                   "approved",
                   "legalDoc"
                 )
-              )
-            }
+              );
+              setIsWaitingButtonLegalDocClicked(true);
+            }}
           />
         </div>
       );
