@@ -22,8 +22,10 @@ const getBadgeInfo = (status: string): { type: BadgeType; title: string } => {
       return { type: "warning", title: "Ditinjau" };
     case "rejected":
       return { type: "error", title: "Ditolak" };
+    case "pending":
+      return { type: "secondary", title: "Perbaikan" };
     default:
-      return { type: "neutral", title: "Perbaikan" };
+      return { type: "neutral", title: "Terdaftar" };
   }
 };
 
