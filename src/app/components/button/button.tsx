@@ -1,15 +1,18 @@
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { ReactNode } from "react";
+import Loading from "../loading/loading";
 
+// Define type for title to support both string and ReactNode
 interface ButtonProps {
-  title: string;
+  title: string | ReactNode; // Allow string or any ReactNode (e.g., JSX like <Loading />)
   size: "sm" | "md" | "lg" | "xl";
   color?: "primary" | "neutral" | "error" | "success";
   icon?: IconDefinition;
   width?: number;
   style?: React.CSSProperties; // Add custom styles
   disabled?: boolean; // Boolean to disable the button
+  loading?: boolean; // Boolean to show loading state
   onClick?: () => void; // Function to handle clicks
 }
 
@@ -28,17 +31,20 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       className={`text-white font-bold btn-${props.size} ${selectedColor} text-md rounded-md px-4 py-2 flex items-center justify-center`}
-      onClick={props.disabled ? undefined : props.onClick} // Use undefined to prevent clicks when disabled
-      disabled={props.disabled}
+      onClick={props.disabled || props.loading ? undefined : props.onClick} // Prevent clicks when disabled or loading
+      disabled={props.disabled || props.loading}
       style={{
         width: props.width,
-        opacity: props.disabled ? 0.5 : 1, // Change opacity if disabled
-        pointerEvents: props.disabled ? "none" : "auto", // Disable pointer events if disabled
+        opacity: props.disabled || props.loading ? 0.5 : 1, // Change opacity if disabled or loading
+        pointerEvents: props.disabled || props.loading ? "none" : "auto", // Disable pointer events if disabled or loading
         ...props.style, // Allow custom styles to override
       }}
     >
-      {props.icon && <FontAwesomeIcon icon={props.icon} className="mr-2" />}
-      {props.title}
+      {props.icon && !props.loading && (
+        <FontAwesomeIcon icon={props.icon} className="mr-2" />
+      )}
+      {/* Conditional rendering for title or loading spinner */}
+      {props.loading ? <Loading type="sm" /> : props.title}
     </button>
   );
 }

@@ -288,16 +288,21 @@ export default function BoInfo() {
   const handleReviewOrRejectOrPending = async (
     id: number,
     status: string,
-    type: "boInfo" | "legalDoc"
+    type: "boInfo" | "legalDoc",
+    reasons?: string | null // alasan yang dipilih atau custom dari modal
   ) => {
     try {
       const url =
         type === "boInfo"
           ? `/bo-infos/${id}/status`
           : `/legal-dokumen/${id}/status`;
-      await axiosWithToken(url, "PUT", { status, reason });
+      await axiosWithToken(url, "PUT", { status, reason: reasons });
       setShowModal(false);
       setStep(0);
+      console.log({
+        status: status,
+        reason: reasons,
+      });
     } catch (error) {
       console.error("Error updating status with reason:", error);
     }
@@ -308,11 +313,10 @@ export default function BoInfo() {
     setStep(1);
   };
 
-  const handleModalSubmit = (status: string) => {
+  const handleModalSubmit = (status: string, reasons?: string) => {
     const type = modalTitle.includes("Dokumen Legal") ? "legalDoc" : "boInfo";
-    handleReviewOrRejectOrPending(selectedItem?.id!, status, type);
+    handleReviewOrRejectOrPending(selectedItem?.id!, status, type, reasons); // kirim alasan ke fungsi
   };
-
   return (
     <>
       <Header title="Bisnis Owner Info" icon={faFile} />
@@ -376,11 +380,12 @@ export default function BoInfo() {
         <Modal
           title={modalTitle}
           onClose={() => setShowModal(false)}
-          onSubmit={() =>
+          onSubmit={(reasons) =>
             handleModalSubmit(
-              modalTitle.includes("ditolak") ? "rejected" : "pending"
+              modalTitle.includes("ditolak") ? "rejected" : "pending",
+              reasons
             )
-          }
+          } // Kirim alasan yang dipilih dari modal
           reason={reason}
           setReason={setReason}
         />

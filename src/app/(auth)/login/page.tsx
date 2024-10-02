@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import logo from "@/public/assets/logo-login.png";
 import Image from "next/image";
 import Button from "@/app/components/button/button";
+import Loading from "@/app/components/loading/loading";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -86,7 +87,7 @@ export default function Login() {
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
           <div className="form-control mt-6">
             <Button
-              title={loading ? "Loading..." : "Login"}
+              title={loading ? <Loading type="sm" /> : "Login"}
               size="md"
               disabled={loading}
             />
