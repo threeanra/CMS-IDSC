@@ -10,6 +10,7 @@ interface ModalProps {
   onSubmit: (selectedReasons: string) => void;
   reason: string;
   setReason: React.Dispatch<React.SetStateAction<string>>;
+  modalType: "boInfo" | "docLegal"; // New prop to determine modal type
 }
 
 export default function Modal({
@@ -18,6 +19,7 @@ export default function Modal({
   onSubmit,
   reason,
   setReason,
+  modalType,
 }: ModalProps) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string>(""); // State for error message
@@ -27,12 +29,143 @@ export default function Modal({
   const [activeOption, setActiveOption] = React.useState<string>("Select");
 
   // Options for reasons (can be expanded with real reasons)
-  const options = [
-    { value: "Dokumen tidak lengkap", label: "Dokumen tidak lengkap" },
-    { value: "Alamat tidak valid", label: "Alamat tidak valid" },
-    { value: "Email salah", label: "Email salah" },
-    { value: "Nomor telepon tidak aktif", label: "Nomor telepon tidak aktif" },
+  const optionsBoInfo = [
+    {
+      value: "Nama Bisnis Owner tidak sesuai",
+      label: "Nama Bisnis Owner tidak sesuai",
+    },
+    {
+      value: "Nama Bisnis Owner terdapat simbol",
+      label: "Nama Bisnis Owner terdapat simbol",
+    },
+    { value: "Nama Bisnis tidak sesuai", label: "Nama Bisnis tidak sesuai" },
+    {
+      value: "Nama Bisnis terdapat simbol",
+      label: "Nama Bisnis terdapat simbol",
+    },
+    {
+      value: "Nama Bisnis tidak sesuai",
+      label: "Nama Bisnis tidak sesuai",
+    },
+    {
+      value: "Email tidak valid",
+      label: "Email tidak valid",
+    },
+    {
+      value: "Format email salah",
+      label: "Format email salah",
+    },
+    {
+      value: "Telepon tidak valid",
+      label: "Telepon tidak valid",
+    },
+    {
+      value: "Telepon tidak sesuai standar",
+      label: "Telepon tidak sesuai standar",
+    },
+    {
+      value: "Nomor handphone tidak dapat dihubungi",
+      label: "Nomor handphone tidak dapat dihubungi",
+    },
+    {
+      value: "Nomor handphone tidak valid",
+      label: "Nomor handphone tidak valid",
+    },
+    {
+      value: "Nomor handphone tidak sesuai standar",
+      label: "Nomor handphone tidak sesuai standar",
+    },
+    {
+      value: "Nomor handphone tidak dapat dihubungi",
+      label: "Nomor handphone tidak dapat dihubungi",
+    },
+    {
+      value: "Nomor handphone tidak valid",
+      label: "Nomor handphone tidak valid",
+    },
+    {
+      value: "Alamat tidak sesuai",
+      label: "Alamat tidak sesuai",
+    },
+    {
+      value: "Alamat tidak valid",
+      label: "Alamat tidak valid",
+    },
   ];
+
+  const optionsDocLegal = [
+    {
+      value: "KTP palsu atau tidak terverifikasi",
+      label: "KTP palsu atau tidak terverifikasi",
+    },
+    {
+      value: "Dokumen tidak lengkap atau tidak jelas",
+      label: "Dokumen tidak lengkap atau tidak jelas",
+    },
+    {
+      value: "Akta tidak asli atau terdapat tanda-tanda pemalsuan",
+      label: "Akta tidak asli atau terdapat tanda-tanda pemalsuan",
+    },
+    {
+      value: "Dokumen tidak sah",
+      label: "Dokumen tidak sah",
+    },
+    {
+      value: "Akta tidak valid/palsu",
+      label: "Akta tidak valid/palsu",
+    },
+    {
+      value: "Dokumen palsu atau tidak terdaftar",
+      label: "Dokumen palsu atau tidak terdaftar",
+    },
+    {
+      value: "SK sudah tidak berlaku atau kedaluwarsa",
+      label: "SK sudah tidak berlaku atau kedaluwarsa",
+    },
+    {
+      value: "Informasi dalam SK tidak sesuai",
+      label: "Informasi dalam SK tidak sesuai",
+    },
+    {
+      value: "Dokumen NPWP tidak jelas",
+      label: "Dokumen NPWP tidak jelas",
+    },
+    {
+      value: "NPWP sudah tidak aktif",
+      label: "NPWP sudah tidak aktif",
+    },
+    {
+      value: "Terdapat perbedaan informasi",
+      label: "Terdapat perbedaan informasi",
+    },
+    {
+      value: "NIB tidak valid atau palsu.",
+      label: "NIB tidak valid atau palsu.",
+    },
+    {
+      value: "Dokumen NIB tidak jelas atau buram",
+      label: "Dokumen NIB tidak jelas atau buram",
+    },
+    {
+      value: "Informasi NIB tidak sesuai",
+      label: "Informasi NIB tidak sesuai",
+    },
+    {
+      value: "Sertifikat ISO sudah kedaluwarsa",
+      label: "Sertifikat ISO sudah kedaluwarsa",
+    },
+    {
+      value: "Nomor sertifikat tidak valid",
+      label: "Nomor sertifikat tidak valid",
+    },
+    {
+      value: "Sertifikat ISO tidak sesuai",
+      label: "Sertifikat ISO tidak sesuai",
+    },
+  ];
+
+  // Choose options based on modal type
+  const options = modalType === "boInfo" ? optionsBoInfo : optionsDocLegal;
 
   useEffect(() => {
     if (modalRef.current) {
@@ -53,7 +186,7 @@ export default function Modal({
     if (isSelect && selectedReasons.length === 0) {
       setErrorMessage("Alasan tidak boleh kosong");
     } else if (!isSelect && reason.trim() === "") {
-      setErrorMessage("Alasan custom tidak boleh kosong");
+      setErrorMessage("Alasan khusus tidak boleh kosong");
     } else {
       const reasons = isSelect
         ? selectedReasons.map((option) => option.value).join(", ")
@@ -72,7 +205,7 @@ export default function Modal({
 
   return (
     <dialog ref={modalRef} className="modal pr-3">
-      <div className="modal-box custom-modal-height flex flex-col justify-between">
+      <div className="modal-box h-[700px] flex flex-col justify-between">
         {/* Judul modal */}
         <div className="bg-primary mb-5 rounded-lg p-5 flex text-lg content-center items-center gap-3 text-white ">
           <FontAwesomeIcon icon={faFile} />
@@ -86,7 +219,7 @@ export default function Modal({
             className={`py-2 px-4 w-full text-black transition-all duration-300 rounded-md 
           ${activeOption === "Select" ? "bg-white shadow" : ""}`}
           >
-            Select
+            Pilih
           </button>
           <button
             onClick={() => handleToggle("Masukkan Pesan Khusus")}
@@ -110,11 +243,12 @@ export default function Modal({
               onChange={(selectedOptions) =>
                 setSelectedReasons(selectedOptions as any)
               } // Update selected reasons
+              placeholder="Pilih alasan..."
             />
           ) : (
             <textarea
-              placeholder="Berikan alasan custom"
-              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[200px]"
+              placeholder="Berikan alasan khusus..."
+              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[350px]"
               value={reason}
               onChange={(e) => setReason(e.target.value)} // Update reason
             />

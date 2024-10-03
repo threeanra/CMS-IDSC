@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
+  "/(auth)/register/page": "app/(auth)/register/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/bisnis-owner/page": "app/bisnis-owner/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/document/dokumen-legal/page": "app/document/dokumen-legal/page.js",
+  "/document/page": "app/document/page.js",
+  "/fasyankes/page": "app/fasyankes/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/log/page": "app/log/page.js",
+  "/master-obat/page": "app/master-obat/page.js",
+  "/protected/page": "app/protected/page.js",
+  "/page": "app/page.js"
+}

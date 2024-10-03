@@ -9,6 +9,7 @@ import Button from "@/app/components/button/button";
 import Input from "@/app/components/input/input";
 import TextArea from "@/app/components/textarea/textarea";
 import Modal from "@/app/components/modal/modal";
+import ModalRejected from "@/app/components/modal/modalrejected";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import InputLink from "@/app/components/inputlink/inputlink";
@@ -73,7 +74,8 @@ export default function BoInfo() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<BusinessOwner[]>([]);
   const [selectedItem, setSelectedItem] = useState<BusinessOwner | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State untuk Modal Revisi
+  const [showModalRejected, setShowModalRejected] = useState(false); // State untuk Modal Tolak
   const [modalTitle, setModalTitle] = useState("");
   const [reason, setReason] = useState<string>("");
   const [isWaitingButtonBoInfoClicked, setIsWaitingButtonBoInfoClicked] =
@@ -133,7 +135,7 @@ export default function BoInfo() {
             title="Revisi"
             size="md"
             onClick={() => {
-              openModal("Alasan untuk ditinjau (Bisnis Owner Info)");
+              openModalRevisi("Alasan untuk ditinjau (Bisnis Owner Info)");
               setIsWaitingButtonBoInfoClicked(true);
             }}
           />
@@ -148,7 +150,7 @@ export default function BoInfo() {
                   "on review",
                   "boInfo"
                 );
-                setIsWaitingButtonBoInfoClicked(true); // Tandai tombol telah ditekan
+                setIsWaitingButtonBoInfoClicked(true);
               }}
             />
           )}
@@ -157,7 +159,7 @@ export default function BoInfo() {
             title="Tolak"
             size="md"
             onClick={() => {
-              openModal("Alasan untuk ditolak (Bisnis Owner Info)");
+              openModalRejected("Alasan untuk ditolak (Bisnis Owner Info)");
               setIsWaitingButtonBoInfoClicked(true);
             }}
           />
@@ -193,7 +195,7 @@ export default function BoInfo() {
             title="Revisi"
             size="md"
             onClick={() => {
-              openModal("Alasan untuk ditinjau (Dokumen Legal)");
+              openModalRevisi("Alasan untuk ditinjau (Dokumen Legal)");
               setIsWaitingButtonLegalDocClicked(true);
             }}
           />
@@ -217,7 +219,7 @@ export default function BoInfo() {
             title="Tolak"
             size="md"
             onClick={() => {
-              openModal("Alasan untuk ditolak (Dokumen Legal)");
+              openModalRejected("Alasan untuk ditolak (Dokumen Legal)");
               setIsWaitingButtonLegalDocClicked(true);
             }}
           />
@@ -256,6 +258,13 @@ export default function BoInfo() {
       <>
         {businessType === "Perusahaan" && (
           <>
+            {dokumen.ktp && (
+              <InputLink
+                label="KTP Direktur Berdasarkan Akta"
+                link={dokumen.ktp}
+              />
+            )}
+
             {dokumen.akta && (
               <InputLink label="Akta Perusahaan" link={dokumen.akta} />
             )}
@@ -280,11 +289,6 @@ export default function BoInfo() {
     );
   };
 
-  const openModal = (title: string) => {
-    setModalTitle(title);
-    setShowModal(true);
-  };
-
   const handleReviewOrRejectOrPending = async (
     id: number,
     status: string,
@@ -298,6 +302,7 @@ export default function BoInfo() {
           : `/legal-dokumen/${id}/status`;
       await axiosWithToken(url, "PUT", { status, reason: reasons });
       setShowModal(false);
+      setShowModalRejected(false);
       setStep(0);
       console.log({
         status: status,
@@ -306,6 +311,18 @@ export default function BoInfo() {
     } catch (error) {
       console.error("Error updating status with reason:", error);
     }
+  };
+
+  // Fungsi untuk memunculkan modal revisi
+  const openModalRevisi = (title: string) => {
+    setModalTitle(title);
+    setShowModal(true); // Memunculkan modal revisi
+  };
+
+  // Fungsi untuk memunculkan modal tolak
+  const openModalRejected = (title: string) => {
+    setModalTitle(title);
+    setShowModalRejected(true); // Memunculkan modal tolak
   };
 
   const handleViewDetails = (item: BusinessOwner) => {
@@ -376,6 +393,8 @@ export default function BoInfo() {
           </div>
         )}
       </div>
+
+      {/* Modal Revisi */}
       {showModal && (
         <Modal
           title={modalTitle}
@@ -386,6 +405,21 @@ export default function BoInfo() {
               reasons
             )
           } // Kirim alasan yang dipilih dari modal
+          reason={reason}
+          setReason={setReason}
+          modalType={
+            modalTitle.includes("Dokumen Legal") ? "docLegal" : "boInfo"
+          }
+        />
+      )}
+      {/* Modal Tolak */}
+      {showModalRejected && (
+        <ModalRejected
+          title={modalTitle}
+          onClose={() => setShowModalRejected(false)}
+          onSubmit={(reasons) => {
+            handleModalSubmit("rejected", reasons);
+          }} // Kirim alasan penolakan
           reason={reason}
           setReason={setReason}
         />
