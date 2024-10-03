@@ -248,7 +248,7 @@ export default function Modal({
           ) : (
             <textarea
               placeholder="Berikan alasan khusus..."
-              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[350px]"
+              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[260px]"
               value={reason}
               onChange={(e) => setReason(e.target.value)} // Update reason
             />

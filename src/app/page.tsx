@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   openGraph: {
     title: "CMS Console ID Smart Care",
   },
+  icons: {
+    icon: "../public/assets/logo-title.png",
+  },
 };
 
 export default function Home() {

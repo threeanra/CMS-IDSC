@@ -12,7 +12,7 @@
       "static/chunks/fd9d1056-3c604aaf18e3d173.js",
       "static/chunks/23-4f48e13a393d5170.js",
       "static/chunks/main-app-61d9575ef5397c74.js",
-      "static/css/a95f0abeefbf3e27.css",
+      "static/css/2cf564498ee70e57.css",
       "static/chunks/870fdd6f-c9c2898b91fd6176.js",
       "static/chunks/896-c457f7ccfb494d97.js",
       "static/chunks/998-6f93b82f6a05b6a4.js",
@@ -55,15 +55,6 @@
       "static/chunks/893-19ef893200f2e99e.js",
       "static/chunks/app/dashboard/page-508a7ca2d4c08908.js"
     ],
-    "/document/dokumen-legal/page": [
-      "static/chunks/webpack-f1f7bcef4e42e05b.js",
-      "static/chunks/fd9d1056-3c604aaf18e3d173.js",
-      "static/chunks/23-4f48e13a393d5170.js",
-      "static/chunks/main-app-61d9575ef5397c74.js",
-      "static/chunks/870fdd6f-c9c2898b91fd6176.js",
-      "static/chunks/896-c457f7ccfb494d97.js",
-      "static/chunks/app/document/dokumen-legal/page-ab6f43d7f61f719f.js"
-    ],
     "/document/page": [
       "static/chunks/webpack-f1f7bcef4e42e05b.js",
       "static/chunks/fd9d1056-3c604aaf18e3d173.js",
@@ -74,7 +65,16 @@
       "static/chunks/896-c457f7ccfb494d97.js",
       "static/chunks/998-6f93b82f6a05b6a4.js",
       "static/chunks/205-23694eaa7101b4dd.js",
-      "static/chunks/app/document/page-2157e9a6912f5e2c.js"
+      "static/chunks/app/document/page-886a8d0ac9d71f48.js"
+    ],
+    "/document/dokumen-legal/page": [
+      "static/chunks/webpack-f1f7bcef4e42e05b.js",
+      "static/chunks/fd9d1056-3c604aaf18e3d173.js",
+      "static/chunks/23-4f48e13a393d5170.js",
+      "static/chunks/main-app-61d9575ef5397c74.js",
+      "static/chunks/870fdd6f-c9c2898b91fd6176.js",
+      "static/chunks/896-c457f7ccfb494d97.js",
+      "static/chunks/app/document/dokumen-legal/page-ab6f43d7f61f719f.js"
     ],
     "/fasyankes/page": [
       "static/chunks/webpack-f1f7bcef4e42e05b.js",

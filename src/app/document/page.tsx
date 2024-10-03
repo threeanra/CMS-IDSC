@@ -150,6 +150,7 @@ export default function BoInfo() {
                   "on review",
                   "boInfo"
                 );
+                console.log(selectedItem?.boInfos?.id!);
                 setIsWaitingButtonBoInfoClicked(true);
               }}
             />
@@ -293,14 +294,33 @@ export default function BoInfo() {
     id: number,
     status: string,
     type: "boInfo" | "legalDoc",
-    reasons?: string | null // alasan yang dipilih atau custom dari modal
+    reasons?: string | null
   ) => {
     try {
       const url =
         type === "boInfo"
           ? `/bo-infos/${id}/status`
           : `/legal-dokumen/${id}/status`;
+
+      // Update status untuk boInfo atau legalDokumen sesuai dengan tipe yang diberikan
       await axiosWithToken(url, "PUT", { status, reason: reasons });
+
+      // Jika bisnis owner ditolak, perbarui juga status dokumen legal menjadi "rejected"
+      if (
+        type === "boInfo" &&
+        status === "rejected" &&
+        selectedItem?.legalDokumen?.id
+      ) {
+        await axiosWithToken(
+          `/legal-dokumen/${selectedItem.legalDokumen.id}/status`,
+          "PUT",
+          {
+            status: "rejected",
+            reason: "Ditolak karena bisnis owner ditolak",
+          }
+        );
+      }
+
       setShowModal(false);
       setShowModalRejected(false);
       setStep(0);
@@ -332,7 +352,11 @@ export default function BoInfo() {
 
   const handleModalSubmit = (status: string, reasons?: string) => {
     const type = modalTitle.includes("Dokumen Legal") ? "legalDoc" : "boInfo";
-    handleReviewOrRejectOrPending(selectedItem?.id!, status, type, reasons); // kirim alasan ke fungsi
+    const id =
+      type === "legalDoc"
+        ? selectedItem?.legalDokumen?.id
+        : selectedItem?.boInfos?.id;
+    handleReviewOrRejectOrPending(id as number, status, type, reasons); // kirim alasan ke fungsi
   };
   return (
     <>
