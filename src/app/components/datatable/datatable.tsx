@@ -19,7 +19,12 @@ type BadgeType =
   | "warning"
   | "error";
 
-// Function to map status to badge type and title in Indonesian
+type HeaderType = {
+  key: string;
+  label: string;
+  badgeKey?: string; // Optional key for badge rendering
+};
+
 const getBadgeInfo = (status: string): { type: BadgeType; title: string } => {
   switch (status) {
     case "approved":
@@ -30,63 +35,62 @@ const getBadgeInfo = (status: string): { type: BadgeType; title: string } => {
       return { type: "error", title: "Ditolak" };
     case "pending":
       return { type: "secondary", title: "Perbaikan" };
+    case "active":
+      return { type: "success", title: "Aktif" }; // Untuk status fasyankes
+    case "non active":
+      return { type: "neutral", title: "Tidak Aktif" }; // Untuk status fasyankes
     default:
       return { type: "neutral", title: "Terdaftar" };
   }
 };
 
-// DataTable component that receives data and pagination logic as props
 export default function DataTable({
   data = [],
   pageCount,
   onPageChange,
   onViewDetails,
-}: any) {
+  headers = [], // New prop for headers
+}: {
+  data: any[];
+  pageCount: number;
+  onPageChange: (selected: { selected: number }) => void;
+  onViewDetails: (item: any) => void;
+  headers: HeaderType[]; // Type for headers
+}) {
   return (
     <div className="overflow-x-auto">
       <table className="table text-md">
         <thead className="text-md">
           <tr>
-            <th>Nama Bisnis Owner</th>
-            <th>Email</th>
-            <th>Status Bo Info</th>
-            <th>Status Document</th>
-            <th>Aksi</th>
+            {headers.map((header) => (
+              <th key={header.key}>{header.label}</th>
+            ))}
+            <th>Aksi</th> {/* Add header for Action column */}
           </tr>
         </thead>
         <tbody>
           {data.length > 0 ? (
             data.map((item: any, index: number) => (
               <tr key={index}>
-                <td>{item.name}</td>
-                <td>{item.email}</td>
-                <td>
-                  {item.boInfos ? (
-                    <Badge
-                      type={getBadgeInfo(item.boInfos.status).type}
-                      title={getBadgeInfo(item.boInfos.status).title}
-                    />
-                  ) : (
-                    "No Info"
-                  )}
-                </td>
-                <td>
-                  {item.legalDokumen ? (
-                    <Badge
-                      type={getBadgeInfo(item.legalDokumen.status).type}
-                      title={getBadgeInfo(item.legalDokumen.status).title}
-                    />
-                  ) : (
-                    "No Info"
-                  )}
-                </td>
+                {headers.map((header) => (
+                  <td key={header.key}>
+                    {header.badgeKey && item[header.badgeKey] ? (
+                      <Badge
+                        type={getBadgeInfo(item[header.badgeKey].status).type}
+                        title={getBadgeInfo(item[header.badgeKey].status).title}
+                      />
+                    ) : (
+                      item[header.key] || "No Info"
+                    )}
+                  </td>
+                ))}
                 <td>
                   <Button
                     title="Lihat"
                     icon={faEye}
                     size="sm"
                     width={100}
-                    disabled={item.boInfos == null}
+                    disabled={item.boInfos == null || item == null}
                     onClick={() => onViewDetails(item)}
                   />
                 </td>
@@ -94,8 +98,8 @@ export default function DataTable({
             ))
           ) : (
             <tr>
-              <td colSpan={5} className="text-center">
-                No data available.
+              <td colSpan={headers.length + 1} className="text-center">
+                Tidak ada data untuk ditampilkan.
               </td>
             </tr>
           )}

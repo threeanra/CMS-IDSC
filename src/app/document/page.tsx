@@ -90,6 +90,13 @@ export default function BoInfo() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<string>("");
 
+  const headers = [
+    { key: "name", label: "Nama Bisnis Owner" },
+    { key: "email", label: "Email" },
+    { key: "boInfos", label: "Status Bo Info", badgeKey: "boInfos" },
+    { key: "legalDokumen", label: "Status Document", badgeKey: "legalDokumen" },
+  ];
+
   const filterStatusToEnglish: any = {
     "Pilih Status": "",
     Disetujui: "approved",
@@ -426,6 +433,7 @@ export default function BoInfo() {
               onViewDetails={handleViewDetails}
               pageCount={totalPages}
               onPageChange={handlePaginate}
+              headers={headers}
             />
           </div>
         ) : (

@@ -10,6 +10,7 @@ import {
   faFile,
   // faHospital,
   faRightFromBracket,
+  faUser,
   // faUsers,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
@@ -38,6 +39,11 @@ const sidebarItems: SidebarItem[] = [
     href: "/document",
     icon: faFile,
     label: "Document",
+  },
+  {
+    href: "/pengguna",
+    icon: faUser,
+    label: "Pengguna",
   },
 ];
 
@@ -73,7 +79,7 @@ export default function Sidebar() {
 
               <ul className="menu">
                 {sidebarItems.map((item) => (
-                  <li key={item.label} className="mb-3">
+                  <li key={item.label} className="mb-2">
                     {/* If there is a list, show dropdown. Else, link to href directly */}
                     {item.list ? (
                       <div
