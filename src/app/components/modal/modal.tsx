@@ -10,7 +10,7 @@ interface ModalProps {
   onSubmit: (selectedReasons: string) => void;
   reason: string;
   setReason: React.Dispatch<React.SetStateAction<string>>;
-  modalType: "boInfo" | "docLegal"; // New prop to determine modal type
+  modalType: "boInfo" | "docLegal";
 }
 
 export default function Modal({
@@ -239,16 +239,16 @@ export default function Modal({
               options={options}
               className="basic-multi-select"
               classNamePrefix="select"
-              value={selectedReasons} // Bind selected reasons to state
+              value={selectedReasons}
               onChange={(selectedOptions) =>
                 setSelectedReasons(selectedOptions as any)
-              } // Update selected reasons
+              }
               placeholder="Pilih alasan..."
             />
           ) : (
             <textarea
               placeholder="Berikan alasan khusus..."
-              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[260px]"
+              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[350px]"
               value={reason}
               onChange={(e) => setReason(e.target.value)} // Update reason
             />

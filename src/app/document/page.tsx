@@ -10,8 +10,9 @@ import Input from "@/app/components/input/input";
 import TextArea from "@/app/components/textarea/textarea";
 import Modal from "@/app/components/modal/modal";
 import ModalRejected from "@/app/components/modal/modalrejected";
-import { useSession } from "next-auth/react";
-import axios from "axios";
+// import { useSession } from "next-auth/react";
+// import axios from "axios";
+import axiosWithToken from "@/app/lib/axiosWithToken";
 import InputLink from "@/app/components/inputlink/inputlink";
 import { CenterAlert } from "@/app/components/alert/alert";
 
@@ -74,45 +75,84 @@ export default function BoInfo() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<BusinessOwner[]>([]);
   const [selectedItem, setSelectedItem] = useState<BusinessOwner | null>(null);
-  const [showModal, setShowModal] = useState(false); // State untuk Modal Revisi
-  const [showModalRejected, setShowModalRejected] = useState(false); // State untuk Modal Tolak
+  const [showModal, setShowModal] = useState(false);
+  const [showModalRejected, setShowModalRejected] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [reason, setReason] = useState<string>("");
   const [isWaitingButtonBoInfoClicked, setIsWaitingButtonBoInfoClicked] =
     useState(false);
   const [isWaitingButtonLegalDocClicked, setIsWaitingButtonLegalDocClicked] =
     useState(false);
+  const [statusChanged, setStatusChanged] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>("");
 
-  const { data: session } = useSession();
-  const token = session?.user?.token;
-
-  const axiosWithToken = (url: string, method: string, body: object = {}) => {
-    if (!token) {
-      throw new Error("Token tidak ditemukan");
-    }
-    return axios({
-      method,
-      url: `${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`,
-      data: body,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    });
+  const filterStatusToEnglish: any = {
+    "Pilih Status": "",
+    Disetujui: "approved",
+    Ditinjau: "on review",
+    Ditolak: "rejected",
+    Perbaikan: "pending",
+    Terdaftar: "apply",
   };
 
+  const optionsFilterStatus = [
+    { value: "Pilih Status", label: "Pilih Status" },
+    { value: "Disetujui", label: "Disetujui" },
+    { value: "Ditinjau", label: "Ditinjau" },
+    { value: "Ditolak", label: "Ditolak" },
+    { value: "Perbaikan", label: "Perbaikan" },
+    { value: "Terdaftar", label: "Terdaftar" },
+  ];
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosWithToken("/bisnis-owners/", "GET");
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setData([]);
-      }
-    };
     fetchData();
-  }, [token, step]);
+  }, []);
+
+  useEffect(() => {
+    if (statusChanged) {
+      fetchData();
+      setStatusChanged(false);
+    }
+  }, [filterStatus, searchTerm, statusChanged]);
+
+  const fetchData = async (page = 1, searchTerm = "", filterStatus = "") => {
+    try {
+      const response = await axiosWithToken(
+        `/bisnis-owners?page=${page}&search=${searchTerm}&status=${filterStatus}`,
+        "GET"
+      );
+
+      setData(response.data.data);
+      setCurrentPage(response.data.currentPage);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    fetchData(1, e.target.value);
+  };
+
+  const handlePaginate = ({ selected }: { selected: number }) => {
+    fetchData(selected + 1);
+  };
+
+  const handleFilterStatus = (e: any) => {
+    const selectedValue = e.target.value;
+    const statusForApi = filterStatusToEnglish[selectedValue];
+
+    // Set the status in state (optional if you don't need to display it)
+    setFilterStatus(statusForApi);
+
+    // Fetch data with the selected status immediately
+    fetchData(1, "", statusForApi);
+  };
 
   const fullAddress = `
     ${selectedItem?.boInfos?.address?.trim() || ""}, ${
@@ -136,32 +176,32 @@ export default function BoInfo() {
             size="md"
             onClick={() => {
               openModalRevisi("Alasan untuk ditinjau (Bisnis Owner Info)");
-              setIsWaitingButtonBoInfoClicked(true);
             }}
           />
-          {!isWaitingButtonBoInfoClicked && status !== "on review" && (
-            <Button
-              color="neutral"
-              title="Menunggu"
-              size="md"
-              onClick={() => {
-                handleReviewOrRejectOrPending(
-                  selectedItem?.boInfos?.id! as number,
-                  "on review",
-                  "boInfo"
-                );
-                console.log(selectedItem?.boInfos?.id!);
-                setIsWaitingButtonBoInfoClicked(true);
-              }}
-            />
-          )}
+          {!isWaitingButtonBoInfoClicked &&
+            status !== "on review" &&
+            status !== "pending" &&
+            status !== "rejected" && (
+              <Button
+                color="neutral"
+                title="Menunggu"
+                size="md"
+                onClick={() => {
+                  handleReviewOrRejectOrPending(
+                    selectedItem?.boInfos?.id! as number,
+                    "on review",
+                    "boInfo"
+                  );
+                  setIsWaitingButtonBoInfoClicked(true);
+                }}
+              />
+            )}
           <Button
             color="error"
             title="Tolak"
             size="md"
             onClick={() => {
               openModalRejected("Alasan untuk ditolak (Bisnis Owner Info)");
-              setIsWaitingButtonBoInfoClicked(true);
             }}
           />
           <Button
@@ -197,31 +237,32 @@ export default function BoInfo() {
             size="md"
             onClick={() => {
               openModalRevisi("Alasan untuk ditinjau (Dokumen Legal)");
-              setIsWaitingButtonLegalDocClicked(true);
             }}
           />
-          {!isWaitingButtonLegalDocClicked && status !== "on review" && (
-            <Button
-              color="neutral"
-              title="Menunggu"
-              size="md"
-              onClick={() => {
-                handleReviewOrRejectOrPending(
-                  selectedItem?.legalDokumen?.id!,
-                  "on review",
-                  "legalDoc"
-                );
-                setIsWaitingButtonLegalDocClicked(true);
-              }}
-            />
-          )}
+          {!isWaitingButtonLegalDocClicked &&
+            status !== "on review" &&
+            status !== "pending" &&
+            status !== "rejected" && (
+              <Button
+                color="neutral"
+                title="Menunggu"
+                size="md"
+                onClick={() => {
+                  handleReviewOrRejectOrPending(
+                    selectedItem?.legalDokumen?.id!,
+                    "on review",
+                    "legalDoc"
+                  );
+                  setIsWaitingButtonLegalDocClicked(true);
+                }}
+              />
+            )}
           <Button
             color="error"
             title="Tolak"
             size="md"
             onClick={() => {
               openModalRejected("Alasan untuk ditolak (Dokumen Legal)");
-              setIsWaitingButtonLegalDocClicked(true);
             }}
           />
           <Button
@@ -324,10 +365,7 @@ export default function BoInfo() {
       setShowModal(false);
       setShowModalRejected(false);
       setStep(0);
-      console.log({
-        status: status,
-        reason: reasons,
-      });
+      setStatusChanged(true);
     } catch (error) {
       console.error("Error updating status with reason:", error);
     }
@@ -361,11 +399,34 @@ export default function BoInfo() {
   return (
     <>
       <Header title="Bisnis Owner Info" icon={faFile} />
-      <div className="pb-10">
+      <div className="pb-4">
         {step === 0 ? (
-          <div className="flex flex-col gap-4">
-            <div className="text-lg font-bold">Informasi Bisnis Owner</div>
-            <DataTable data={data} onViewDetails={handleViewDetails} />
+          <div className="flex flex-col gap-2 shadow-md p-5 pb-7">
+            <div className="flex justify-between">
+              <select
+                className="select select-sm border-gray-300 text-gray-500"
+                onChange={handleFilterStatus}
+              >
+                {optionsFilterStatus.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                    {option.value}
+                  </option>
+                ))}
+              </select>
+              <input
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Search..."
+                className="input input-sm input-bordered rounded-md mb-1"
+              />
+            </div>
+            <hr />
+            <DataTable
+              data={data}
+              onViewDetails={handleViewDetails}
+              pageCount={totalPages}
+              onPageChange={handlePaginate}
+            />
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -423,12 +484,12 @@ export default function BoInfo() {
         <Modal
           title={modalTitle}
           onClose={() => setShowModal(false)}
-          onSubmit={(reasons) =>
+          onSubmit={(reasons) => {
             handleModalSubmit(
               modalTitle.includes("ditolak") ? "rejected" : "pending",
               reasons
-            )
-          } // Kirim alasan yang dipilih dari modal
+            );
+          }}
           reason={reason}
           setReason={setReason}
           modalType={

@@ -36,14 +36,12 @@ export const authOptions: AuthOptions = {
 
           // Check if access_token is returned
           if (data.access_token) {
-            const expirationTime = 24 * 60 * 60 * 1000;
             return {
               id: data.data.id,
               username: data.data.username,
               email: data.data.email,
               role: data.data.role,
               token: data.access_token,
-              expires: Date.now() + expirationTime,
             };
           }
         } catch (error) {
@@ -65,12 +63,6 @@ export const authOptions: AuthOptions = {
         token.email = user.email;
         token.role = user.role;
         token.token = user.token;
-        token.expires = user.expires; // Set token expiration
-      }
-
-      // Check if the token has expired
-      if (token.expires && Date.now() > new Date(token.expires).getTime()) {
-        return { ...token, expired: true }; // Mark the token as expired
       }
 
       return token;

@@ -12,6 +12,7 @@ const config: Config = {
         primary: "#0663EC",
         secondary: "#01CDFF",
         dark: "#0F0F35",
+        white: "#FFFFFF",
       },
       // Add a comma here
       // backgroundImage: {
