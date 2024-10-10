@@ -8,13 +8,12 @@ import DataTable from "@/app/components/datatable/datatable";
 import Button from "@/app/components/button/button";
 import Input from "@/app/components/input/input";
 import TextArea from "@/app/components/textarea/textarea";
-import Modal from "@/app/components/modal/modal";
+import Modal from "@/app/components/modal/modalrevision";
 import ModalRejected from "@/app/components/modal/modalrejected";
-// import { useSession } from "next-auth/react";
-// import axios from "axios";
 import axiosWithToken from "@/app/lib/axiosWithToken";
 import InputLink from "@/app/components/inputlink/inputlink";
 import { CenterAlert } from "@/app/components/alert/alert";
+import { filterStatusToEnglish, optionsFilterStatus } from "@/app/data/data";
 
 interface BoInfos {
   id: string | number;
@@ -97,24 +96,6 @@ export default function BoInfo() {
     { key: "legalDokumen", label: "Status Document", badgeKey: "legalDokumen" },
   ];
 
-  const filterStatusToEnglish: any = {
-    "Pilih Status": "",
-    Disetujui: "approved",
-    Ditinjau: "on review",
-    Ditolak: "rejected",
-    Perbaikan: "pending",
-    Terdaftar: "apply",
-  };
-
-  const optionsFilterStatus = [
-    { value: "Pilih Status", label: "Pilih Status" },
-    { value: "Disetujui", label: "Disetujui" },
-    { value: "Ditinjau", label: "Ditinjau" },
-    { value: "Ditolak", label: "Ditolak" },
-    { value: "Perbaikan", label: "Perbaikan" },
-    { value: "Terdaftar", label: "Terdaftar" },
-  ];
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -134,6 +115,8 @@ export default function BoInfo() {
       );
 
       setData(response.data.data);
+      console.log(response);
+
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -429,6 +412,7 @@ export default function BoInfo() {
             </div>
             <hr />
             <DataTable
+              context="boInfo"
               data={data}
               onViewDetails={handleViewDetails}
               pageCount={totalPages}

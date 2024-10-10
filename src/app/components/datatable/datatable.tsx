@@ -25,22 +25,29 @@ type HeaderType = {
   badgeKey?: string; // Optional key for badge rendering
 };
 
-const getBadgeInfo = (status: string): { type: BadgeType; title: string } => {
-  switch (status) {
-    case "approved":
-      return { type: "success", title: "Disetujui" };
-    case "on review":
-      return { type: "warning", title: "Ditinjau" };
-    case "rejected":
-      return { type: "error", title: "Ditolak" };
-    case "pending":
-      return { type: "secondary", title: "Perbaikan" };
-    case "active":
-      return { type: "success", title: "Aktif" }; // Untuk status fasyankes
-    case "non active":
-      return { type: "neutral", title: "Tidak Aktif" }; // Untuk status fasyankes
-    default:
-      return { type: "neutral", title: "Terdaftar" };
+const getBadgeInfo = (
+  status: string | boolean | null,
+  context: "boInfo" | "pengguna"
+): { type: BadgeType; title: string } => {
+  if (context === "pengguna") {
+    return status === true
+      ? { type: "success", title: "Aktif" }
+      : { type: "neutral", title: "Tidak Aktif" };
+  } else {
+    switch (status) {
+      case "approved":
+        return { type: "success", title: "Disetujui" };
+      case "on review":
+        return { type: "warning", title: "Ditinjau" };
+      case "rejected":
+        return { type: "error", title: "Ditolak" };
+      case "pending":
+        return { type: "secondary", title: "Perbaikan" };
+      case null:
+        return { type: "neutral", title: "No Info" }; // Specific to boInfo when status is null
+      default:
+        return { type: "neutral", title: "Terdaftar" };
+    }
   }
 };
 
@@ -49,13 +56,15 @@ export default function DataTable({
   pageCount,
   onPageChange,
   onViewDetails,
-  headers = [], // New prop for headers
+  headers = [],
+  context, // Add context prop
 }: {
   data: any[];
   pageCount: number;
   onPageChange: (selected: { selected: number }) => void;
   onViewDetails: (item: any) => void;
-  headers: HeaderType[]; // Type for headers
+  headers: HeaderType[];
+  context: "boInfo" | "pengguna"; // Specify the context type
 }) {
   return (
     <div className="overflow-x-auto">
@@ -65,7 +74,7 @@ export default function DataTable({
             {headers.map((header) => (
               <th key={header.key}>{header.label}</th>
             ))}
-            <th>Aksi</th> {/* Add header for Action column */}
+            <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -74,10 +83,22 @@ export default function DataTable({
               <tr key={index}>
                 {headers.map((header) => (
                   <td key={header.key}>
-                    {header.badgeKey && item[header.badgeKey] ? (
+                    {header.badgeKey ? (
                       <Badge
-                        type={getBadgeInfo(item[header.badgeKey].status).type}
-                        title={getBadgeInfo(item[header.badgeKey].status).title}
+                        type={
+                          getBadgeInfo(
+                            item[header.badgeKey]?.status ??
+                              item[header.badgeKey],
+                            context
+                          ).type
+                        }
+                        title={
+                          getBadgeInfo(
+                            item[header.badgeKey]?.status ??
+                              item[header.badgeKey],
+                            context
+                          ).title
+                        }
                       />
                     ) : (
                       item[header.key] || "No Info"
@@ -90,7 +111,7 @@ export default function DataTable({
                     icon={faEye}
                     size="sm"
                     width={100}
-                    disabled={item.boInfos == null || item == null}
+                    disabled={context === "boInfo" && item.boInfos === null}
                     onClick={() => onViewDetails(item)}
                   />
                 </td>
@@ -124,7 +145,7 @@ export default function DataTable({
           pageRangeDisplayed={3}
           breakClassName={"break-me"}
           containerClassName="flex space-x-1 items-center"
-          previousLinkClassName="p-1 px-2 bg-gray-200 rounded hover:bg-gray-300 flex items-center "
+          previousLinkClassName="p-1 px-2 bg-gray-200 rounded hover:bg-gray-300 flex items-center"
           nextLinkClassName="p-1 px-2 flex items-center bg-gray-200 rounded hover:bg-gray-300"
           disabledClassName="opacity-50 cursor-not-allowed"
           activeClassName="flex items-center cursor-pointer w-8 h-8 bg-primary text-white rounded"

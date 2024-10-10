@@ -21,10 +21,25 @@ export default function ModalRejected({
   const [errorMessage, setErrorMessage] = React.useState<string>("");
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault(); // Prevent the default behavior of the Escape key
+        onClose(); // Call onClose to close the modal
+      }
+    };
+
     if (modalRef.current) {
       modalRef.current.showModal();
+      window.addEventListener("keydown", handleKeyDown);
     }
-  }, []);
+
+    return () => {
+      if (modalRef.current) {
+        modalRef.current.close();
+      }
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
 
   const handleClose = () => {
     if (modalRef.current) {

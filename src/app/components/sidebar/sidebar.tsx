@@ -4,14 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import logo from "@/public/assets/logo.png";
 import {
-  // faCapsules,
-  // faChartBar,
-  // faCog,
+  // faClock,
   faFile,
-  // faHospital,
   faRightFromBracket,
   faUser,
-  // faUsers,
   IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
@@ -40,6 +36,11 @@ const sidebarItems: SidebarItem[] = [
     icon: faFile,
     label: "Document",
   },
+  // {
+  //   href: "/riwayat-aktivitas",
+  //   icon: faClock,
+  //   label: "Riwayat Aktivitas",
+  // },
   {
     href: "/pengguna",
     icon: faUser,

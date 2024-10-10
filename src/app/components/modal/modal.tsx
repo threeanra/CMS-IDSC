@@ -1,282 +1,91 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { faFile } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useEffect } from "react";
-import Select from "react-select";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import Header from "@/app/components/header/header";
+import { useEffect, useRef } from "react";
+import { formatDate } from "@/app/lib/date";
+
+interface AccessFasyankes {
+  username: string;
+  role: string;
+  created_at: string;
+  created_by: string;
+}
 
 interface ModalProps {
   title: string;
   onClose: () => void;
-  onSubmit: (selectedReasons: string) => void;
-  reason: string;
-  setReason: React.Dispatch<React.SetStateAction<string>>;
-  modalType: "boInfo" | "docLegal";
+  accessFasyankes: AccessFasyankes[];
 }
 
-export default function Modal({
-  title,
-  onClose,
-  onSubmit,
-  reason,
-  setReason,
-  modalType,
-}: ModalProps) {
+export default function Modal({ title, onClose, accessFasyankes }: ModalProps) {
   const modalRef = useRef<HTMLDialogElement | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<string>(""); // State for error message
-  const [selectedReasons, setSelectedReasons] = React.useState<
-    { value: string; label: string }[]
-  >([]); // State for selected reasons
-  const [activeOption, setActiveOption] = React.useState<string>("Select");
-
-  // Options for reasons (can be expanded with real reasons)
-  const optionsBoInfo = [
-    {
-      value: "Nama Bisnis Owner tidak sesuai",
-      label: "Nama Bisnis Owner tidak sesuai",
-    },
-    {
-      value: "Nama Bisnis Owner terdapat simbol",
-      label: "Nama Bisnis Owner terdapat simbol",
-    },
-    { value: "Nama Bisnis tidak sesuai", label: "Nama Bisnis tidak sesuai" },
-    {
-      value: "Nama Bisnis terdapat simbol",
-      label: "Nama Bisnis terdapat simbol",
-    },
-    {
-      value: "Nama Bisnis tidak sesuai",
-      label: "Nama Bisnis tidak sesuai",
-    },
-    {
-      value: "Email tidak valid",
-      label: "Email tidak valid",
-    },
-    {
-      value: "Format email salah",
-      label: "Format email salah",
-    },
-    {
-      value: "Telepon tidak valid",
-      label: "Telepon tidak valid",
-    },
-    {
-      value: "Telepon tidak sesuai standar",
-      label: "Telepon tidak sesuai standar",
-    },
-    {
-      value: "Nomor handphone tidak dapat dihubungi",
-      label: "Nomor handphone tidak dapat dihubungi",
-    },
-    {
-      value: "Nomor handphone tidak valid",
-      label: "Nomor handphone tidak valid",
-    },
-    {
-      value: "Nomor handphone tidak sesuai standar",
-      label: "Nomor handphone tidak sesuai standar",
-    },
-    {
-      value: "Nomor handphone tidak dapat dihubungi",
-      label: "Nomor handphone tidak dapat dihubungi",
-    },
-    {
-      value: "Nomor handphone tidak valid",
-      label: "Nomor handphone tidak valid",
-    },
-    {
-      value: "Alamat tidak sesuai",
-      label: "Alamat tidak sesuai",
-    },
-    {
-      value: "Alamat tidak valid",
-      label: "Alamat tidak valid",
-    },
-  ];
-
-  const optionsDocLegal = [
-    {
-      value: "KTP palsu atau tidak terverifikasi",
-      label: "KTP palsu atau tidak terverifikasi",
-    },
-    {
-      value: "Dokumen tidak lengkap atau tidak jelas",
-      label: "Dokumen tidak lengkap atau tidak jelas",
-    },
-    {
-      value: "Akta tidak asli atau terdapat tanda-tanda pemalsuan",
-      label: "Akta tidak asli atau terdapat tanda-tanda pemalsuan",
-    },
-    {
-      value: "Dokumen tidak sah",
-      label: "Dokumen tidak sah",
-    },
-    {
-      value: "Akta tidak valid/palsu",
-      label: "Akta tidak valid/palsu",
-    },
-    {
-      value: "Dokumen palsu atau tidak terdaftar",
-      label: "Dokumen palsu atau tidak terdaftar",
-    },
-    {
-      value: "SK sudah tidak berlaku atau kedaluwarsa",
-      label: "SK sudah tidak berlaku atau kedaluwarsa",
-    },
-    {
-      value: "Informasi dalam SK tidak sesuai",
-      label: "Informasi dalam SK tidak sesuai",
-    },
-    {
-      value: "Dokumen NPWP tidak jelas",
-      label: "Dokumen NPWP tidak jelas",
-    },
-    {
-      value: "NPWP sudah tidak aktif",
-      label: "NPWP sudah tidak aktif",
-    },
-    {
-      value: "Terdapat perbedaan informasi",
-      label: "Terdapat perbedaan informasi",
-    },
-    {
-      value: "NIB tidak valid atau palsu.",
-      label: "NIB tidak valid atau palsu.",
-    },
-    {
-      value: "Dokumen NIB tidak jelas atau buram",
-      label: "Dokumen NIB tidak jelas atau buram",
-    },
-    {
-      value: "Informasi NIB tidak sesuai",
-      label: "Informasi NIB tidak sesuai",
-    },
-    {
-      value: "Sertifikat ISO sudah kedaluwarsa",
-      label: "Sertifikat ISO sudah kedaluwarsa",
-    },
-    {
-      value: "Nomor sertifikat tidak valid",
-      label: "Nomor sertifikat tidak valid",
-    },
-    {
-      value: "Sertifikat ISO tidak sesuai",
-      label: "Sertifikat ISO tidak sesuai",
-    },
-  ];
-
-  // Choose options based on modal type
-  const options = modalType === "boInfo" ? optionsBoInfo : optionsDocLegal;
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault(); // Prevent the default behavior of the Escape key
+        onClose(); // Call onClose to close the modal
+      }
+    };
+
     if (modalRef.current) {
       modalRef.current.showModal();
+      window.addEventListener("keydown", handleKeyDown);
     }
-  }, []);
 
-  const handleClose = () => {
-    if (modalRef.current) {
-      modalRef.current.close();
-    }
-    onClose();
-  };
-
-  const handleSubmit = () => {
-    const isSelect = activeOption === "Select";
-
-    if (isSelect && selectedReasons.length === 0) {
-      setErrorMessage("Alasan tidak boleh kosong");
-    } else if (!isSelect && reason.trim() === "") {
-      setErrorMessage("Alasan khusus tidak boleh kosong");
-    } else {
-      const reasons = isSelect
-        ? selectedReasons.map((option) => option.value).join(", ")
-        : reason;
-
-      setErrorMessage("");
-      onSubmit(reasons); // Ensure 'reasons' is correctly formed
-    }
-  };
-
-  const handleToggle = (option: string) => {
-    setActiveOption(option);
-    setSelectedReasons([]);
-    setReason("");
-  };
+    return () => {
+      if (modalRef.current) {
+        modalRef.current.close();
+      }
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose]);
 
   return (
-    <dialog ref={modalRef} className="modal pr-3">
-      <div className="modal-box h-[700px] flex flex-col justify-between">
-        {/* Judul modal */}
-        <div className="bg-primary mb-5 rounded-lg p-5 flex text-lg content-center items-center gap-3 text-white ">
-          <FontAwesomeIcon icon={faFile} />
-          <span>{title}</span>
+    <>
+      <dialog ref={modalRef} className="modal" onClick={onClose}>
+        <div
+          className="modal-box max-w-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Header icon={faEye} title={title} />
+          <div className="overflow-x-auto">
+            <table className="table text-md">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Created Date</th>
+                  <th>Created By</th>
+                </tr>
+              </thead>
+              <tbody>
+                {accessFasyankes && accessFasyankes.length > 0 ? (
+                  accessFasyankes.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.username}</td>
+                      <td>{item.role}</td>
+                      <td>{formatDate(item.created_at)}</td>
+                      <td>{item.created_by}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={4} className="text-center">
+                      No data available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button type="button" onClick={() => modalRef.current?.close()}>
+              Close
+            </button>
+          </form>
         </div>
-
-        {/* Tombol Select dan Masukkan Pesan Khusus */}
-        <div className="flex bg-gray-200 rounded-md w-full p-3">
-          <button
-            onClick={() => handleToggle("Select")}
-            className={`py-2 px-4 w-full text-black transition-all duration-300 rounded-md 
-          ${activeOption === "Select" ? "bg-white shadow" : ""}`}
-          >
-            Pilih
-          </button>
-          <button
-            onClick={() => handleToggle("Masukkan Pesan Khusus")}
-            className={`py-2 px-4 w-full text-black transition-all duration-300 rounded-md 
-          ${activeOption === "Masukkan Pesan Khusus" ? "bg-white shadow" : ""}`}
-          >
-            Masukkan Pesan Khusus
-          </button>
-        </div>
-
-        {/* Konten modal, Select atau Textarea */}
-        <div className="flex-grow mt-4">
-          {activeOption === "Select" ? (
-            <Select
-              isMulti
-              name="reasons"
-              options={options}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              value={selectedReasons}
-              onChange={(selectedOptions) =>
-                setSelectedReasons(selectedOptions as any)
-              }
-              placeholder="Pilih alasan..."
-            />
-          ) : (
-            <textarea
-              placeholder="Berikan alasan khusus..."
-              className="textarea resize-none w-full textarea-bordered rounded-md textarea-primary h-[350px]"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)} // Update reason
-            />
-          )}
-
-          {/* Pesan Error */}
-          {errorMessage && (
-            <p className="text-red-500 mt-2">{errorMessage}</p> // Display error message
-          )}
-        </div>
-
-        {/* Tombol Aksi (Kirim & Keluar) */}
-        <div className="modal-action mt-4 flex justify-end">
-          <button
-            className="btn bg-primary hover:bg-primary text-white rounded-md"
-            onClick={handleSubmit} // Trigger validation and submission
-          >
-            Kirim
-          </button>
-          <button
-            type="button"
-            className="btn bg-error hover:bg-error text-white rounded-md"
-            onClick={handleClose}
-          >
-            Keluar
-          </button>
-        </div>
-      </div>
-    </dialog>
+      </dialog>
+    </>
   );
 }
