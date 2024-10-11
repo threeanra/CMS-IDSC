@@ -412,7 +412,7 @@ export default function BoInfo() {
             </div>
             <hr />
             <DataTable
-              context="boInfo"
+              context="badgeString"
               data={data}
               onViewDetails={handleViewDetails}
               pageCount={totalPages}

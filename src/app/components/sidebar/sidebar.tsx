@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import logo from "@/public/assets/logo.png";
 import {
-  // faClock,
+  faClock,
   faFile,
   faRightFromBracket,
   faUser,
@@ -36,11 +36,11 @@ const sidebarItems: SidebarItem[] = [
     icon: faFile,
     label: "Document",
   },
-  // {
-  //   href: "/riwayat-aktivitas",
-  //   icon: faClock,
-  //   label: "Riwayat Aktivitas",
-  // },
+  {
+    href: "/riwayat-aktivitas",
+    icon: faClock,
+    label: "Riwayat Aktivitas",
+  },
   {
     href: "/pengguna",
     icon: faUser,

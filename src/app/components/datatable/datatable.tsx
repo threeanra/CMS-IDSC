@@ -27,9 +27,9 @@ type HeaderType = {
 
 const getBadgeInfo = (
   status: string | boolean | null,
-  context: "boInfo" | "pengguna"
+  context: "badgeString" | "badgeBoolean"
 ): { type: BadgeType; title: string } => {
-  if (context === "pengguna") {
+  if (context === "badgeBoolean") {
     return status === true
       ? { type: "success", title: "Aktif" }
       : { type: "neutral", title: "Tidak Aktif" };
@@ -62,9 +62,9 @@ export default function DataTable({
   data: any[];
   pageCount: number;
   onPageChange: (selected: { selected: number }) => void;
-  onViewDetails: (item: any) => void;
+  onViewDetails?: (item: any) => void;
   headers: HeaderType[];
-  context: "boInfo" | "pengguna"; // Specify the context type
+  context: "badgeString" | "badgeBoolean"; // Specify the context type
 }) {
   return (
     <div className="overflow-x-auto">
@@ -74,7 +74,7 @@ export default function DataTable({
             {headers.map((header) => (
               <th key={header.key}>{header.label}</th>
             ))}
-            <th>Aksi</th>
+            {onViewDetails && <th>Aksi</th>}
           </tr>
         </thead>
         <tbody>
@@ -106,14 +106,18 @@ export default function DataTable({
                   </td>
                 ))}
                 <td>
-                  <Button
-                    title="Lihat"
-                    icon={faEye}
-                    size="sm"
-                    width={100}
-                    disabled={context === "boInfo" && item.boInfos === null}
-                    onClick={() => onViewDetails(item)}
-                  />
+                  {onViewDetails && (
+                    <Button
+                      title="Lihat"
+                      icon={faEye}
+                      size="sm"
+                      width={100}
+                      disabled={
+                        context === "badgeString" && item.boInfos === null
+                      }
+                      onClick={() => onViewDetails(item)}
+                    />
+                  )}
                 </td>
               </tr>
             ))

@@ -51,7 +51,7 @@ export default function Pengguna() {
 
       const response = await axiosWithToken(params, "GET");
 
-      setData(response.data);
+      setData(response.data.data);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -106,7 +106,7 @@ export default function Pengguna() {
         </div>
         <hr />
         <DataTable
-          context="pengguna"
+          context="badgeBoolean"
           data={data}
           headers={header}
           onPageChange={handlePaginate}

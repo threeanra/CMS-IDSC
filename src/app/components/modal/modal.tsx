@@ -72,7 +72,7 @@ export default function Modal({ title, onClose, accessFasyankes }: ModalProps) {
                 ) : (
                   <tr>
                     <td colSpan={4} className="text-center">
-                      No data available
+                      Tidak ada data untuk ditampilkan
                     </td>
                   </tr>
                 )}
