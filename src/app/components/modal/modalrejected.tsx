@@ -39,7 +39,7 @@ export default function ModalRejected({
       }
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose]);
+  }, []);
 
   const handleClose = () => {
     if (modalRef.current) {

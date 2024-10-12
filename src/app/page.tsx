@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CMS Console ID Smart Care",
-  description: "CMS Console ID Smart Care",
+  title: "Console - idSmartCare",
+  description: "Console - idSmartCare",
   openGraph: {
-    title: "CMS Console ID Smart Care",
+    title: "Console - idSmartCare",
   },
 };
 

@@ -50,7 +50,7 @@ export default function Modal({
       }
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose]);
+  }, []);
 
   const handleClose = () => {
     if (modalRef.current) {
