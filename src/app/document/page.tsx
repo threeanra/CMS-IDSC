@@ -14,6 +14,7 @@ import axiosWithToken from "@/app/lib/axiosWithToken";
 import InputLink from "@/app/components/inputlink/inputlink";
 import { CenterAlert } from "@/app/components/alert/alert";
 import { filterStatusToEnglish, optionsFilterStatus } from "@/app/data/data";
+import { useSession } from "next-auth/react";
 
 interface BoInfos {
   id: string | number;
@@ -95,6 +96,10 @@ export default function BoInfo() {
     { key: "boInfos", label: "Status Bo Info", badgeKey: "boInfos" },
     { key: "legalDokumen", label: "Status Document", badgeKey: "legalDokumen" },
   ];
+
+  const { data: session } = useSession();
+
+  const PIC = session?.user?.username;
 
   useEffect(() => {
     fetchData();
@@ -180,7 +185,8 @@ export default function BoInfo() {
                   handleReviewOrRejectOrPending(
                     selectedItem?.boInfos?.id! as number,
                     "on review",
-                    "boInfo"
+                    "boInfo",
+                    PIC as string
                   );
                   setWaitingBoInfoId(selectedItem?.boInfos?.id! as number);
                 }}
@@ -203,7 +209,8 @@ export default function BoInfo() {
                 handleReviewOrRejectOrPending(
                   selectedItem?.boInfos?.id! as number,
                   "approved",
-                  "boInfo"
+                  "boInfo",
+                  PIC as string
                 )
               );
               setWaitingBoInfoId(selectedItem?.boInfos?.id! as number);
@@ -241,7 +248,8 @@ export default function BoInfo() {
                   handleReviewOrRejectOrPending(
                     selectedItem?.legalDokumen?.id!,
                     "on review",
-                    "legalDoc"
+                    "legalDoc",
+                    PIC as string
                   );
                   setWaitingLegalDocId(selectedItem?.legalDokumen?.id!);
                 }}
@@ -264,7 +272,8 @@ export default function BoInfo() {
                 handleReviewOrRejectOrPending(
                   selectedItem?.legalDokumen?.id!,
                   "approved",
-                  "legalDoc"
+                  "legalDoc",
+                  PIC as string
                 )
               );
               setWaitingLegalDocId(selectedItem?.legalDokumen?.id!);
@@ -325,6 +334,7 @@ export default function BoInfo() {
     id: number,
     status: string,
     type: "boInfo" | "legalDoc",
+    petugas: string,
     reasons?: string | null
   ) => {
     try {
@@ -334,7 +344,11 @@ export default function BoInfo() {
           : `/legal-dokumen/${id}/status`;
 
       // Update status untuk boInfo atau legalDokumen sesuai dengan tipe yang diberikan
-      await axiosWithToken(url, "PUT", { status, reason: reasons });
+      await axiosWithToken(url, "PUT", {
+        status,
+        reason: reasons,
+        petugas: petugas,
+      });
 
       // Jika bisnis owner ditolak, perbarui juga status dokumen legal menjadi "rejected"
       if (
@@ -384,7 +398,13 @@ export default function BoInfo() {
       type === "legalDoc"
         ? selectedItem?.legalDokumen?.id
         : selectedItem?.boInfos?.id;
-    handleReviewOrRejectOrPending(id as number, status, type, reasons); // kirim alasan ke fungsi
+    handleReviewOrRejectOrPending(
+      id as number,
+      status,
+      type,
+      reasons as string,
+      PIC as string
+    ); // kirim alasan ke fungsi
   };
   return (
     <>

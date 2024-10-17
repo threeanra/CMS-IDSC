@@ -17,12 +17,8 @@ export default function RootLayoutClient({
   const pathname = usePathname();
   const isAuthPage = pathname === "/login";
 
-  // Dynamically update the title on the client side
   useEffect(() => {
-    document.title =
-      pathname === "/login"
-        ? "Login - CMS Console ID Smart Care"
-        : "CMS Console ID Smart Care";
+    document.title = "Console - idSmartCare";
   }, [pathname]);
 
   return (

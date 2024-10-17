@@ -3,11 +3,11 @@
   "/(auth)/login/page": "app/(auth)/login/page.js",
   "/(auth)/register/page": "app/(auth)/register/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/dashboard/page": "app/dashboard/page.js",
   "/document/page": "app/document/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/log/page": "app/log/page.js",
   "/pengguna/page": "app/pengguna/page.js",
   "/riwayat-aktivitas/page": "app/riwayat-aktivitas/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
   "/page": "app/page.js"
 }
