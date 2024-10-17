@@ -1,4 +1,4 @@
-// File: E:\Adis\Development\_KANTOR\CMS ID Smart Care\cms-idsc\src\app\api\auth\[...nextauth]\route.ts
+// File: E:\Adis\Development\_KANTOR\CMS ID Smart Care\cms-idsc\Front-End\src\app\api\auth\[...nextauth]\route.ts
 import * as entry from '../../../../../../src/app/api/auth/[...nextauth]/route.js'
 import type { NextRequest } from 'next/server.js'
 

@@ -1,4 +1,4 @@
-// File: E:\Adis\Development\_KANTOR\CMS ID Smart Care\cms-idsc\src\app\document\page.tsx
+// File: E:\Adis\Development\_KANTOR\CMS ID Smart Care\cms-idsc\Front-End\src\app\document\page.tsx
 import * as entry from '../../../../src/app/document/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

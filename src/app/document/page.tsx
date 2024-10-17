@@ -78,10 +78,10 @@ export default function BoInfo() {
   const [showModalRejected, setShowModalRejected] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [reason, setReason] = useState<string>("");
-  const [isWaitingButtonBoInfoClicked, setIsWaitingButtonBoInfoClicked] =
-    useState(false);
-  const [isWaitingButtonLegalDocClicked, setIsWaitingButtonLegalDocClicked] =
-    useState(false);
+  const [waitingBoInfoId, setWaitingBoInfoId] = useState<number | null>(null);
+  const [waitingLegalDocId, setWaitingLegalDocId] = useState<number | null>(
+    null
+  );
   const [statusChanged, setStatusChanged] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -168,7 +168,7 @@ export default function BoInfo() {
               openModalRevisi("Alasan untuk ditinjau (Bisnis Owner Info)");
             }}
           />
-          {!isWaitingButtonBoInfoClicked &&
+          {waitingBoInfoId !== selectedItem?.boInfos?.id &&
             status !== "on review" &&
             status !== "pending" &&
             status !== "rejected" && (
@@ -182,7 +182,7 @@ export default function BoInfo() {
                     "on review",
                     "boInfo"
                   );
-                  setIsWaitingButtonBoInfoClicked(true);
+                  setWaitingBoInfoId(selectedItem?.boInfos?.id! as number);
                 }}
               />
             )}
@@ -206,7 +206,7 @@ export default function BoInfo() {
                   "boInfo"
                 )
               );
-              setIsWaitingButtonBoInfoClicked(true);
+              setWaitingBoInfoId(selectedItem?.boInfos?.id! as number);
             }}
           />
         </div>
@@ -229,7 +229,7 @@ export default function BoInfo() {
               openModalRevisi("Alasan untuk ditinjau (Dokumen Legal)");
             }}
           />
-          {!isWaitingButtonLegalDocClicked &&
+          {waitingLegalDocId !== selectedItem?.legalDokumen?.id &&
             status !== "on review" &&
             status !== "pending" &&
             status !== "rejected" && (
@@ -243,7 +243,7 @@ export default function BoInfo() {
                     "on review",
                     "legalDoc"
                   );
-                  setIsWaitingButtonLegalDocClicked(true);
+                  setWaitingLegalDocId(selectedItem?.legalDokumen?.id!);
                 }}
               />
             )}
@@ -267,7 +267,7 @@ export default function BoInfo() {
                   "legalDoc"
                 )
               );
-              setIsWaitingButtonLegalDocClicked(true);
+              setWaitingLegalDocId(selectedItem?.legalDokumen?.id!);
             }}
           />
         </div>
