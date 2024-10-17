@@ -37,6 +37,17 @@
       "static/chunks/main-app-993b72cb0501a97c.js",
       "static/chunks/app/(auth)/register/page-898800a8b3608428.js"
     ],
+    "/dashboard/page": [
+      "static/chunks/webpack-4020105f1cb685e0.js",
+      "static/chunks/fd9d1056-65e2f16ade76507c.js",
+      "static/chunks/23-2564a0ab05975721.js",
+      "static/chunks/main-app-993b72cb0501a97c.js",
+      "static/chunks/870fdd6f-c873c110f6337441.js",
+      "static/chunks/ca377847-9004b1b0a2031e23.js",
+      "static/chunks/896-caa17fb273d9db82.js",
+      "static/chunks/893-3e3ffff1ecedec23.js",
+      "static/chunks/app/dashboard/page-cd7ed9b6939cea0a.js"
+    ],
     "/document/page": [
       "static/chunks/webpack-4020105f1cb685e0.js",
       "static/chunks/fd9d1056-65e2f16ade76507c.js",
@@ -48,7 +59,7 @@
       "static/chunks/998-cc02de6eb537479b.js",
       "static/chunks/633-c46b206889f8d7b9.js",
       "static/chunks/787-8f2df880a9f91443.js",
-      "static/chunks/app/document/page-354d5d79845c4085.js"
+      "static/chunks/app/document/page-59f5a08012f3ae2a.js"
     ],
     "/log/page": [
       "static/chunks/webpack-4020105f1cb685e0.js",
@@ -66,7 +77,7 @@
       "static/chunks/896-caa17fb273d9db82.js",
       "static/chunks/998-cc02de6eb537479b.js",
       "static/chunks/633-c46b206889f8d7b9.js",
-      "static/chunks/app/pengguna/page-6c16425d2b13e8ff.js"
+      "static/chunks/app/pengguna/page-5771cae37e82fbab.js"
     ],
     "/riwayat-aktivitas/page": [
       "static/chunks/webpack-4020105f1cb685e0.js",
@@ -79,18 +90,7 @@
       "static/chunks/998-cc02de6eb537479b.js",
       "static/chunks/633-c46b206889f8d7b9.js",
       "static/chunks/280-750c61934913062f.js",
-      "static/chunks/app/riwayat-aktivitas/page-a3d5a70e32e409e0.js"
-    ],
-    "/dashboard/page": [
-      "static/chunks/webpack-4020105f1cb685e0.js",
-      "static/chunks/fd9d1056-65e2f16ade76507c.js",
-      "static/chunks/23-2564a0ab05975721.js",
-      "static/chunks/main-app-993b72cb0501a97c.js",
-      "static/chunks/870fdd6f-c873c110f6337441.js",
-      "static/chunks/ca377847-9004b1b0a2031e23.js",
-      "static/chunks/896-caa17fb273d9db82.js",
-      "static/chunks/893-3e3ffff1ecedec23.js",
-      "static/chunks/app/dashboard/page-cd7ed9b6939cea0a.js"
+      "static/chunks/app/riwayat-aktivitas/page-541341deb1162b25.js"
     ],
     "/page": [
       "static/chunks/webpack-4020105f1cb685e0.js",
