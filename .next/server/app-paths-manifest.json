@@ -1,13 +1,13 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/(auth)/register/page": "app/(auth)/register/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
   "/document/page": "app/document/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/log/page": "app/log/page.js",
-  "/pengguna/page": "app/pengguna/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/(auth)/register/page": "app/(auth)/register/page.js",
   "/riwayat-aktivitas/page": "app/riwayat-aktivitas/page.js",
-  "/page": "app/page.js"
+  "/pengguna/page": "app/pengguna/page.js",
+  "/log/page": "app/log/page.js",
+  "/page": "app/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }

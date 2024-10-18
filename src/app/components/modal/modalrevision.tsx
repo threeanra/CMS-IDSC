@@ -92,17 +92,17 @@ export default function Modal({
         </div>
 
         {/* Tombol Select dan Masukkan Pesan Khusus */}
-        <div className="flex bg-gray-200 rounded-md w-full p-3">
+        <div className="flex bg-gray-200 rounded-md w-full py-3 px-3 gap-2">
           <button
             onClick={() => handleToggle("Select")}
-            className={`py-2 px-4 w-full text-black transition-all duration-300 rounded-md 
+            className={`py-2 w-full text-black transition-all duration-300 rounded-md 
           ${activeOption === "Select" ? "bg-white shadow" : ""}`}
           >
             Pilih
           </button>
           <button
             onClick={() => handleToggle("Masukkan Pesan Khusus")}
-            className={`py-2 px-4 w-full text-black transition-all duration-300 rounded-md 
+            className={`py-2 px-3 w-full text-black transition-all duration-300 rounded-md 
           ${activeOption === "Masukkan Pesan Khusus" ? "bg-white shadow" : ""}`}
           >
             Masukkan Pesan Khusus

@@ -392,20 +392,42 @@ export default function BoInfo() {
     setStep(1);
   };
 
-  const handleModalSubmit = (status: string, reasons?: string) => {
+  // Fungsi submit untuk modal revisi
+  const handleModalSubmit = async (status: string, reasons?: string) => {
     const type = modalTitle.includes("Dokumen Legal") ? "legalDoc" : "boInfo";
     const id =
       type === "legalDoc"
         ? selectedItem?.legalDokumen?.id
         : selectedItem?.boInfos?.id;
-    handleReviewOrRejectOrPending(
+
+    await handleReviewOrRejectOrPending(
       id as number,
       status,
       type,
       reasons as string,
       PIC as string
-    ); // kirim alasan ke fungsi
+    );
+
+    // Reset waiting ID setelah submit berhasil
+    if (type === "legalDoc") {
+      setWaitingLegalDocId(null);
+    } else {
+      setWaitingBoInfoId(null);
+    }
+
+    // Tutup modal dan reset reason setelah submit
+    setShowModal(false);
+    setReason("");
   };
+
+  // Reset state setelah modal ditutup
+  useEffect(() => {
+    if (!showModal) {
+      setWaitingBoInfoId(null);
+      setWaitingLegalDocId(null);
+    }
+  }, [showModal]);
+
   return (
     <>
       <Header title="Bisnis Owner Info" icon={faFile} />
