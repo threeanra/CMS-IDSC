@@ -201,20 +201,25 @@ export default function BoInfo() {
             }}
           />
           <Button
-            color="success"
-            title="Setujui"
-            size="md"
-            onClick={() => {
-              CenterAlert("question", () =>
-                handleReviewOrRejectOrPending(
-                  selectedItem?.boInfos?.id! as number,
-                  "approved",
-                  "boInfo",
-                  PIC as string
-                )
-              );
-              setWaitingBoInfoId(selectedItem?.boInfos?.id! as number);
-            }}
+              color="success"
+              title="Setujui"
+              size="md"
+              onClick={() => {
+                CenterAlert(
+                    "question",
+                    () => {
+                      handleReviewOrRejectOrPending(
+                          selectedItem?.boInfos?.id! as number,
+                          "approved",
+                          "boInfo",
+                          PIC as string
+                      );
+                    },
+                    () => {
+                      setWaitingBoInfoId(selectedItem?.boInfos?.id! as number); // Hide Revisi button
+                    }
+                );
+              }}
           />
         </div>
       );
@@ -264,20 +269,25 @@ export default function BoInfo() {
             }}
           />
           <Button
-            color="success"
-            title="Setujui"
-            size="md"
-            onClick={() => {
-              CenterAlert("question", () =>
-                handleReviewOrRejectOrPending(
-                  selectedItem?.legalDokumen?.id!,
-                  "approved",
-                  "legalDoc",
-                  PIC as string
-                )
-              );
-              setWaitingLegalDocId(selectedItem?.legalDokumen?.id!);
-            }}
+              color="success"
+              title="Setujui"
+              size="md"
+              onClick={() => {
+                CenterAlert(
+                    "question",
+                    () => {
+                      handleReviewOrRejectOrPending(
+                          selectedItem?.legalDokumen?.id!,
+                          "approved",
+                          "legalDoc",
+                          PIC as string
+                      );
+                    },
+                    () => {
+                      setWaitingLegalDocId(selectedItem?.legalDokumen?.id!); // Hide Revisi button
+                    }
+                );
+              }}
           />
         </div>
       );
@@ -448,7 +458,7 @@ export default function BoInfo() {
               <input
                 value={searchTerm}
                 onChange={handleSearch}
-                placeholder="Search..."
+                placeholder="Cari..."
                 className="input input-sm input-bordered rounded-md mb-1"
               />
             </div>

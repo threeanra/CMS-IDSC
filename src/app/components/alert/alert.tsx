@@ -17,7 +17,7 @@ export const ToastAlert = (icon: any, message: any) => {
   });
 };
 
-export const CenterAlert = (icon: any, onConfirm: () => void) => {
+export const CenterAlert = (icon: any, onConfirm: () => void, onCompleted:() => void) => {
   Swal.fire({
     title: "Apakah kamu yakin?",
     icon: icon,
@@ -36,6 +36,7 @@ export const CenterAlert = (icon: any, onConfirm: () => void) => {
       }).then(() => {
         // Setelah alert sukses, panggil callback
         onConfirm();
+        onCompleted();
       });
     }
   });
