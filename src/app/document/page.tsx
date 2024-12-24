@@ -75,7 +75,7 @@ export default function BoInfo() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<BusinessOwner[]>([]);
   const [selectedItem, setSelectedItem] = useState<BusinessOwner | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalRevision, setShowModalRevision] = useState(false);
   const [showModalRejected, setShowModalRejected] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [reason, setReason] = useState<string>("");
@@ -375,7 +375,7 @@ export default function BoInfo() {
         );
       }
       console.log(response);
-      setShowModal(false);
+      setShowModalRevision(false);
       setShowModalRejected(false);
       setStep(0);
       setStatusChanged(true);
@@ -387,13 +387,13 @@ export default function BoInfo() {
   // Fungsi untuk memunculkan modal revisi
   const openModalRevisi = (title: string) => {
     setModalTitle(title);
-    setShowModal(true); // Memunculkan modal revisi
+    setShowModalRevision(true);
   };
 
   // Fungsi untuk memunculkan modal tolak
   const openModalRejected = (title: string) => {
     setModalTitle(title);
-    setShowModalRejected(true); // Memunculkan modal tolak
+    setShowModalRejected(true);
   };
 
   const handleViewDetails = (item: BusinessOwner) => {
@@ -423,18 +423,20 @@ export default function BoInfo() {
       setWaitingBoInfoId(null);
     }
 
-    // Tutup modal dan reset reason setelah submit
-    setShowModal(false);
+    setStep(0);
+    setStatusChanged(true);
+    setShowModalRevision(false);
+    setShowModalRejected(false);
     setReason("");
   };
 
   // Reset state setelah modal ditutup
   useEffect(() => {
-    if (!showModal) {
+    if (!setShowModalRevision) {
       setWaitingBoInfoId(null);
       setWaitingLegalDocId(null);
     }
-  }, [showModal]);
+  }, [setShowModalRevision]);
 
   return (
     <>
@@ -522,10 +524,10 @@ export default function BoInfo() {
       </div>
 
       {/* Modal Revisi */}
-      {showModal && (
+      {showModalRevision && (
         <Modal
           title={modalTitle}
-          onClose={() => setShowModal(false)}
+          onClose={() => setShowModalRevision(false)}
           onSubmit={(reasons) => {
             handleModalSubmit(
               modalTitle.includes("ditolak") ? "rejected" : "pending",
