@@ -35,6 +35,7 @@ export default function Modal({ title, onClose, accessFasyankes }: ModalProps) {
 
     return () => {
       if (modalRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         modalRef.current.close();
       }
       window.removeEventListener("keydown", handleKeyDown);
