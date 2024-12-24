@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
