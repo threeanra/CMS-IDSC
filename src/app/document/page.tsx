@@ -120,7 +120,6 @@ export default function BoInfo() {
       );
 
       setData(response.data.data);
-      console.log(response);
 
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
@@ -201,25 +200,25 @@ export default function BoInfo() {
             }}
           />
           <Button
-              color="success"
-              title="Setujui"
-              size="md"
-              onClick={() => {
-                CenterAlert(
-                    "question",
-                    () => {
-                      handleReviewOrRejectOrPending(
-                          selectedItem?.boInfos?.id! as number,
-                          "approved",
-                          "boInfo",
-                          PIC as string
-                      );
-                    },
-                    () => {
-                      setWaitingBoInfoId(selectedItem?.boInfos?.id! as number); // Hide Revisi button
-                    }
-                );
-              }}
+            color="success"
+            title="Setujui"
+            size="md"
+            onClick={() => {
+              CenterAlert(
+                "question",
+                () => {
+                  handleReviewOrRejectOrPending(
+                    selectedItem?.boInfos?.id! as number,
+                    "approved",
+                    "boInfo",
+                    PIC as string
+                  );
+                },
+                () => {
+                  setWaitingBoInfoId(selectedItem?.boInfos?.id! as number); // Hide Revisi button
+                }
+              );
+            }}
           />
         </div>
       );
@@ -269,25 +268,25 @@ export default function BoInfo() {
             }}
           />
           <Button
-              color="success"
-              title="Setujui"
-              size="md"
-              onClick={() => {
-                CenterAlert(
-                    "question",
-                    () => {
-                      handleReviewOrRejectOrPending(
-                          selectedItem?.legalDokumen?.id!,
-                          "approved",
-                          "legalDoc",
-                          PIC as string
-                      );
-                    },
-                    () => {
-                      setWaitingLegalDocId(selectedItem?.legalDokumen?.id!); // Hide Revisi button
-                    }
-                );
-              }}
+            color="success"
+            title="Setujui"
+            size="md"
+            onClick={() => {
+              CenterAlert(
+                "question",
+                () => {
+                  handleReviewOrRejectOrPending(
+                    selectedItem?.legalDokumen?.id!,
+                    "approved",
+                    "legalDoc",
+                    PIC as string
+                  );
+                },
+                () => {
+                  setWaitingLegalDocId(selectedItem?.legalDokumen?.id!); // Hide Revisi button
+                }
+              );
+            }}
           />
         </div>
       );
@@ -354,10 +353,10 @@ export default function BoInfo() {
           : `/legal-dokumen/${id}/status`;
 
       // Update status untuk boInfo atau legalDokumen sesuai dengan tipe yang diberikan
-      await axiosWithToken(url, "PUT", {
+      const response = await axiosWithToken(url, "PUT", {
         status,
-        reason: reasons,
         petugas: petugas,
+        reason: reasons,
       });
 
       // Jika bisnis owner ditolak, perbarui juga status dokumen legal menjadi "rejected"
@@ -375,7 +374,7 @@ export default function BoInfo() {
           }
         );
       }
-
+      console.log(response);
       setShowModal(false);
       setShowModalRejected(false);
       setStep(0);
@@ -402,7 +401,6 @@ export default function BoInfo() {
     setStep(1);
   };
 
-  // Fungsi submit untuk modal revisi
   const handleModalSubmit = async (status: string, reasons?: string) => {
     const type = modalTitle.includes("Dokumen Legal") ? "legalDoc" : "boInfo";
     const id =
@@ -414,8 +412,8 @@ export default function BoInfo() {
       id as number,
       status,
       type,
-      reasons as string,
-      PIC as string
+      PIC as string,
+      reasons as string
     );
 
     // Reset waiting ID setelah submit berhasil
